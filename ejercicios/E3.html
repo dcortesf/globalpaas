@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Asignación de permisos</title>
+	<link rel="stylesheet" href="../css/reveal.css">
+	<!--<link rel="stylesheet" href="./css/theme/default.css" id="theme"> -->
+	<link rel="stylesheet" href="../css/theme/globalpaas.css" id="theme">
+	<!--Add support for earlier versions of Internet Explorer -->
+	<!--[if lt IE 9]>
+	<script src="lib/js/html5shiv.js"></script>
+	<![endif]-->
+</head>
+
+<body>
+	<!-- Wrap the entire slide show in a div using the "reveal" class. -->
+	<div class="reveal">
+		<!-- Wrap all slides in a single "slides" class -->
+		<div class="slides">
+
+			<!-- ALL SLIDES GO HERE -->
+			<!-- Each section element contains an individual slide -->
+			<section>
+				<h1>E3 - Publicando en Internet</h1>
+				<p>
+						El PaaS de Serenity nos permite llevar una aplicación a Internet en un tiempo record.
+				 </p>
+			</section>
+
+			<section>
+				<section>
+					<h1>¿Qué necesitamos?</h1>
+					<p>
+						<ol>
+							<li>
+								2 minutos
+							</li>
+							<li>
+								Permiso de publicación en Internet
+							</li>
+							<li>
+								Una aplicación corriendo en OpenShift
+							</li>
+						</ol>
+					</p>
+
+				</section>
+				<section>
+					<h1>¿Cómo pido los permisos de publicación a Internet?</h1>
+					<p>
+						El propietario del proyecto debe enviar una solicitud al equipo de Global PaaS <font color="red">(global_paas@produban.com)</font>
+					</p>
+				</section>
+
+			</section>
+
+
+			<section>
+				<h1>Paso 1: </h1>
+				<p>Nos conectamos a OpenShift: oc login <font color="red">&lt;fqdn&gt;</font></p>
+				<div style="color:white">
+					<code>
+						./oc login https://api.boae.paas.gsnetcloud.corp:8443
+					</code>
+				</div>
+			</section>
+
+			<section>
+				<section>
+					<h1>Paso 2: Creamos la ruta</h1>
+					<p>
+						Para crear la ruta, creamos un fichero como el que se describe abajo ...
+					</p>
+				</section>
+				<section>
+					<h1>
+						descriptorRuta.yaml
+					</h1>
+					<pre><code class="hljs" data-trim contenteditable>
+apiVersion: v1
+kind: Route
+metadata:
+	annotations:
+		openshift.io/host.generated: "true"
+	labels:
+		app_name: [APPLICATION_NAME]
+		internet: "true"
+	name: [APPLICATION_NAME]-public
+	namespace: [PROJECT_NAME]
+spec:
+	host: [APPLICATION_NAME]-[PROJECT_NAME].appls.boae.paas.gsnetcloud.com
+	tls:
+		termination: edge
+	to:
+		kind: Service
+		name: [APPLICATION_NAME]
+status: {}
+
+					</code></pre>
+
+				</section>
+				<section>
+					<h1>¿Qué acabo de hacer?</h1>
+					<p>
+						Lo que acabas de hacer es crear un objeto de OpenShift, el objeto <font color="red">Route</font>,
+						además, le estás indicando una serie de parámetros, <font color="red">(todos los que van entre corchetes)</font>
+						que reflejan las características de la ruta y la aplicación a la que pertenece <font color="red">(FQDN, nombre de app, nombre de proyecto)</font>
+					</p>
+				</section>
+			</section>
+			<section>
+				<h1> Paso 3: Subir la ruta a OpenShift</h1>
+				<p>
+					Hemos creado el descriptor YAML de la ruta, pero aún está en nuestro HD, para llevarlo a OpenShift haremos lo siguiente:
+				</p>
+				<code>
+					./oc create -f <font color="red">descriptorRuta.yaml</font>
+				</code>
+			</section>
+
+
+
+
+
+
+			<!-- Fin de las secciones -->
+
+			</div>
+	</div>
+	<script src="../lib/js/head.min.js"></script>
+	<script src="../js/reveal.js"></script>
+
+	<script>
+		// Required, even if empty.
+		Reveal.initialize({
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Asignación de permisos</title>
+	<link rel="stylesheet" href="../css/reveal.css">
+	<!--<link rel="stylesheet" href="./css/theme/default.css" id="theme"> -->
+	<link rel="stylesheet" href="../css/theme/globalpaas.css" id="theme">
+	<!--Add support for earlier versions of Internet Explorer -->
+	<!--[if lt IE 9]>
+	<script src="lib/js/html5shiv.js"></script>
+	<![endif]-->
+</head>
+
+<body>
+	<!-- Wrap the entire slide show in a div using the "reveal" class. -->
+	<div class="reveal">
+		<!-- Wrap all slides in a single "slides" class -->
+		<div class="slides">
+
+			<!-- ALL SLIDES GO HERE -->
+			<!-- Each section element contains an individual slide -->
+			<section>
+				<h1>E2 - Gestión de permisos</h1>
+				<p>
+						Cuando el equipo de Global PaaS crea un proyecto, se <font color="red">asignan permisos de administrador al usuario peticionario</font>.
+						Este usuario se encargará de conceder permisos al resto del equipo.
+				 </p>
+			</section>
+
+			<section>
+				<section>
+					<h1>¿Qué necesitamos?</h1>
+					<p>
+						<ol>
+							<li>
+								2 minutos
+							</li>
+							<li>
+								Credenciales de OpenShift
+							</li>
+							<li>
+								Proyecto OpenShift
+							</li>
+						</ol>
+					</p>
+
+				</section>
+				<section>
+					<h1>¿De dónde saco las credenciales y el proyecto?</h1>
+					<p>
+						Si aún no tienes acceso a OpenShift, puedes utilizar el OnBoarding de GreenLight. Tienes más información <a href="#" target="blank">aquí
+
+						</a>
+
+					</p>
+				</section>
+
+			</section>
+
+
+			<section>
+				<h1>Paso 1: </h1>
+				<p>Nos conectamos a OpenShift: oc login <font color="red">&lt;fqdn&gt;</font></p>
+				<div style="color:white">
+					<code>
+						./oc login https://api.boae.paas.gsnetcloud.corp:8443
+					</code>
+				</div>
+			</section>
+
+			<section>
+				<section>
+					<h1>Paso 2: Asignamos los permisos</h1>
+					<p>
+						oc policy add-role-to-user edit <font color="red">&lt;user_name&gt;</font> -n <font color="red">&lt;project_name&gt;</font>
+					</p>
+
+					<div style="color:white">
+						<code>
+							oc policy add-role-to-user edit <font color="red">xIS11103</font> -n <font color="red">MiProyecto</font>
+						</code>
+					</div>
+				</section>
+				<section>
+					<h1>¿Qué tipo de permisos puedo asignar?</h1>
+					<p>
+						Puedes asignar los siguientes:
+					</p>
+					<ol>
+						<li>
+							<font color="red">view</font> para usuarios de solo lectura
+						</li>
+						<li>
+							<font color="red">edit</font> para usuarios que pueden subir y desplegar elementos en el proyecto
+						</li>
+						<li>
+							<font color="red">admin</font> para usuarios que pueden conceder permisos a otros usuarios
+						</li>
+					</ol>
+				</section>
+			</section>
+			<section>
+				<h1> Paso 3: Comprobación de permisos</h1>
+				<p>
+					Podemos revisar los permisos asignados mediante:
+				</p>
+				<code>
+					./oc describe policyBindings :default -n <font color="red">&lt;project_name&gt;</font>
+				</code>
+			</section>
+			<section>
+				<h1> Paso 4: Eliminación de permisos</h1>
+				<p>
+					Podemos eliminar permisos de la siguiente forma:
+				</p>
+				<code>
+					oc policy remove-role-from-user view n000001 -n myproject
+				</code>
+
+			</section>
+
+
+
+
+
+			<!-- Fin de las secciones -->
+
+			</div>
+	</div>
+	<script src="../lib/js/head.min.js"></script>
+	<script src="../js/reveal.js"></script>
+
+	<script>
+		// Required, even if empty.
+		Reveal.initialize({
+		});
+	</script>
+</body>
+</html>
